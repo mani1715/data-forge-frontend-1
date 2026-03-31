@@ -73,10 +73,22 @@ function App() {
     setLoading(true);
     console.log('=== ACTION START ===');
     console.log('Calling API:', '/api/action');
-    console.log('Action type:', actionType, 'Strategy:', cleanStrategy);
+    console.log('Action type:', actionType);
+    
+    // Build payload based on action type
+    // Only "fill_missing" requires strategy, other actions don't
+    let payload;
+    if (actionType === 'fill_missing') {
+      payload = { action: actionType, strategy: cleanStrategy };
+      console.log('Strategy:', cleanStrategy);
+    } else {
+      payload = { action: actionType };
+    }
+    
+    console.log('Sending action payload:', payload);
     
     try {
-      const res = await api.post('/api/action', { action: actionType, strategy: cleanStrategy });
+      const res = await api.post('/api/action', payload);
       console.log('✅ Action successful:', res.data);
       
       // FRONTEND SAFETY - Use optional chaining and fallbacks
