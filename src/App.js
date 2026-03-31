@@ -179,10 +179,31 @@ function App() {
     }
   }, [cleanStrategy]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const downloadUrl = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/download`;
-    console.log('Opening download URL:', downloadUrl);
-    window.open(downloadUrl, '_blank');
+    console.log('Downloading from:', downloadUrl);
+    
+    try {
+      const response = await fetch(downloadUrl);
+      if (!response.ok) throw new Error('Download failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cleaned_data.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      setMessage('Data downloaded successfully!');
+      setMessageType('success');
+    } catch (err) {
+      console.error('Download error:', err);
+      setMessage('Download failed. Please try again.');
+      setMessageType('error');
+    }
   };
 
   const handleReset = () => { 

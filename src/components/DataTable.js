@@ -16,34 +16,35 @@ const DataTable = ({ data }) => {
 
   const headers = Object.keys(data[0]);
 
-  // Function to check if a value is "missing" and should be highlighted
+  // Function to check if a value should be shown in RED (missing/placeholder value)
   const isMissingValue = (value, columnName) => {
-    // Check for null, undefined, NaN
     if (value === null || value === undefined) return true;
     
     const strValue = String(value).trim().toLowerCase();
+    const colLower = columnName.toLowerCase();
     
     // Check for common missing value indicators
     if (strValue === '' || strValue === 'nan' || strValue === 'none' || strValue === 'null') return true;
     
-    // Check for "Unknown" in text columns (not ID/Order columns)
-    const colLower = columnName.toLowerCase();
-    if (strValue === 'unknown' && !colLower.includes('id') && !colLower.includes('order')) return true;
+    // Check for "Unknown" - always red
+    if (strValue === 'unknown') return true;
     
-    // Check for zero in numeric columns that typically shouldn't be zero
-    // (like ID, Age, Price, Quantity, but NOT columns that can legitimately be 0)
-    if (value === 0 || strValue === '0') {
-      const zeroSignificantCols = ['id', 'age', 'price', 'salary', 'amount', 'quantity', 'qty', 'order'];
-      if (zeroSignificantCols.some(col => colLower.includes(col))) {
-        return true;
-      }
+    // Check for 0 in numeric columns (price, amount, quantity, age, salary, id, etc.)
+    if ((value === 0 || strValue === '0' || strValue === '0.0') && 
+        (colLower.includes('price') || colLower.includes('amount') || 
+         colLower.includes('cost') || colLower.includes('total') ||
+         colLower.includes('quantity') || colLower.includes('qty') ||
+         colLower.includes('age') || colLower.includes('salary') ||
+         colLower.includes('revenue') || colLower.includes('id') ||
+         colLower.includes('number') || colLower.includes('count'))) {
+      return true;
     }
     
     // Check for placeholder date
-    if (strValue === '00-00-0000' || strValue === '0000-00-00') return true;
-    
-    // Check for "MISSING" text
-    if (strValue === 'missing') return true;
+    if (strValue === '00-00-0000' || strValue === '0000-00-00' || 
+        strValue === '00/00/0000' || strValue === '0000/00/00') {
+      return true;
+    }
     
     return false;
   };
@@ -56,19 +57,6 @@ const DataTable = ({ data }) => {
     
     if (strValue === '' || strValue.toLowerCase() === 'nan' || strValue.toLowerCase() === 'none') {
       return 'MISSING';
-    }
-    
-    // Show actual value for zeros (but mark as missing visually)
-    if (value === 0 || strValue === '0') {
-      const colLower = columnName.toLowerCase();
-      const zeroSignificantCols = ['id', 'age', 'price', 'salary', 'amount', 'quantity', 'qty', 'order'];
-      if (zeroSignificantCols.some(col => colLower.includes(col))) {
-        return '0 (Missing)';
-      }
-    }
-    
-    if (strValue === '00-00-0000' || strValue === '0000-00-00') {
-      return 'Invalid Date';
     }
     
     return strValue;
