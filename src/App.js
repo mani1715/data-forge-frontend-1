@@ -32,8 +32,15 @@ function App() {
     setMessage('Uploading your dataset...');
     setMessageType('info');
     setDatasetName(file.name);
+    
+    console.log('=== UPLOAD START ===');
+    console.log('Calling API:', '/api/upload');
+    console.log('File:', file.name, 'Size:', file.size);
+    
     try {
       const res = await api.post('/api/upload', formData);
+      console.log('✅ Upload successful:', res.data);
+      
       // FRONTEND SAFETY - Use optional chaining and fallbacks
       setScore(res?.data?.quality_score || 0);
       setStats({ 
@@ -49,7 +56,13 @@ function App() {
       setMessage('Dataset uploaded successfully!');
       setMessageType('success');
     } catch (err) {
-      setMessage(`Error: ${err?.message || 'Upload failed'}`);
+      console.error('❌ Upload failed:', err);
+      console.error('Error details:', {
+        message: err?.message,
+        response: err?.response?.data,
+        status: err?.response?.status
+      });
+      setMessage(`Error: ${err?.response?.data?.detail || err?.message || 'Upload failed'}`);
       setMessageType('error');
     } finally {
       setLoading(false);
@@ -58,8 +71,14 @@ function App() {
 
   const handleAction = async (actionType) => {
     setLoading(true);
+    console.log('=== ACTION START ===');
+    console.log('Calling API:', '/api/action');
+    console.log('Action type:', actionType, 'Strategy:', cleanStrategy);
+    
     try {
       const res = await api.post('/api/action', { action: actionType, strategy: cleanStrategy });
+      console.log('✅ Action successful:', res.data);
+      
       // FRONTEND SAFETY - Use optional chaining and fallbacks
       setScore(res?.data?.new_score || 0);
       setTableData(res?.data?.preview || []);
@@ -67,14 +86,25 @@ function App() {
       setAiMessage(res?.data?.message || '');
       setMessageType('success');
     } catch (err) {
-      setMessage(`Error: ${err?.message || 'Action failed'}`);
+      console.error('❌ Action failed:', err);
+      console.error('Error details:', {
+        message: err?.message,
+        response: err?.response?.data,
+        status: err?.response?.status
+      });
+      setMessage(`Error: ${err?.response?.data?.detail || err?.message || 'Action failed'}`);
       setMessageType('error');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDownload = () => window.open(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/download`, '_blank');
+  const handleDownload = () => {
+    const downloadUrl = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/download`;
+    console.log('=== DOWNLOAD START ===');
+    console.log('Opening download URL:', downloadUrl);
+    window.open(downloadUrl, '_blank');
+  };
   const handleReset = () => { setIsUploaded(false); setShowLanding(true); setDatasetName(''); setMessage(''); };
   const handleGetStarted = () => setShowLanding(false);
 
