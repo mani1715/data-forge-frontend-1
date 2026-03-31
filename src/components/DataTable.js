@@ -24,19 +24,24 @@ const DataTable = ({ data }) => {
     const colLower = columnName.toLowerCase();
     
     // Check for common missing value indicators
-    if (strValue === '' || strValue === 'nan' || strValue === 'none' || strValue === 'null') return true;
+    if (strValue === '' || strValue === 'nan' || strValue === 'none' || 
+        strValue === 'null' || strValue === 'missing' || strValue === '??' || strValue === '?') {
+      return true;
+    }
     
-    // Check for "Unknown" - always red
+    // Check for "Unknown"
     if (strValue === 'unknown') return true;
     
-    // Check for 0 in numeric columns (price, amount, quantity, age, salary, id, etc.)
-    if ((value === 0 || strValue === '0' || strValue === '0.0') && 
+    // Check for 0 in Order ID columns
+    if ((colLower.includes('order') || colLower === 'id') && (value === 0 || strValue === '0')) {
+      return true;
+    }
+    
+    // Check for 0 in numeric columns (price, quantity, etc.)
+    if ((value === 0 || strValue === '0') && 
         (colLower.includes('price') || colLower.includes('amount') || 
          colLower.includes('cost') || colLower.includes('total') ||
-         colLower.includes('quantity') || colLower.includes('qty') ||
-         colLower.includes('age') || colLower.includes('salary') ||
-         colLower.includes('revenue') || colLower.includes('id') ||
-         colLower.includes('number') || colLower.includes('count'))) {
+         colLower.includes('quantity') || colLower.includes('qty'))) {
       return true;
     }
     
@@ -47,19 +52,6 @@ const DataTable = ({ data }) => {
     }
     
     return false;
-  };
-
-  // Format display value
-  const formatDisplayValue = (value, columnName) => {
-    if (value === null || value === undefined) return 'MISSING';
-    
-    const strValue = String(value).trim();
-    
-    if (strValue === '' || strValue.toLowerCase() === 'nan' || strValue.toLowerCase() === 'none') {
-      return 'MISSING';
-    }
-    
-    return strValue;
   };
 
   return (
@@ -83,7 +75,9 @@ const DataTable = ({ data }) => {
                 {headers.map((key) => {
                   const value = row[key];
                   const missing = isMissingValue(value, key);
-                  const displayValue = formatDisplayValue(value, key);
+                  
+                  // Display the value as-is (backend already formatted it)
+                  const displayValue = value === null || value === undefined ? 'MISSING' : String(value);
                   
                   return (
                     <td key={key}>
