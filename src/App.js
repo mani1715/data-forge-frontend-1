@@ -4,7 +4,6 @@ import FileUpload from './components/FileUpload';
 import StatsCard from './components/StatsCard';
 import DataTable from './components/DataTable';
 import CleaningControls from './components/CleaningControls';
-import Visualization from './components/Visualization';
 import VisualizationsPage from './components/VisualizationsPage';
 import Footer from './components/Footer';
 import api from './services/api';
