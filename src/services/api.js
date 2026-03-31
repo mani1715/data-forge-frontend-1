@@ -2,13 +2,22 @@ import axios from 'axios';
 
 // Get backend URL from environment variable with fallback for local development
 // DO NOT include /api in baseURL - it's added in individual route calls
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+let BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
-if (!process.env.REACT_APP_BACKEND_URL) {
-  console.warn('REACT_APP_BACKEND_URL not set, using default: http://localhost:8001');
+// CRITICAL: Ensure URL has protocol (https:// or http://)
+// Without protocol, axios treats it as relative path
+if (BACKEND_URL && !BACKEND_URL.startsWith('http://') && !BACKEND_URL.startsWith('https://')) {
+  console.error('❌ BACKEND_URL MISSING PROTOCOL! Adding https://');
+  console.error('Original value:', BACKEND_URL);
+  BACKEND_URL = 'https://' + BACKEND_URL;
+  console.warn('Fixed to:', BACKEND_URL);
 }
 
-console.log('Backend URL configured:', BACKEND_URL);
+if (!process.env.REACT_APP_BACKEND_URL) {
+  console.warn('⚠️ REACT_APP_BACKEND_URL not set, using default: http://localhost:8001');
+}
+
+console.log('✅ Backend URL configured:', BACKEND_URL);
 
 // Create axios instance with production-grade configuration for large file uploads
 const api = axios.create({
