@@ -1,7 +1,7 @@
 import React from 'react';
-import { Settings, Wand2, Trash2, TrendingDown, Type, Sparkles } from 'lucide-react';
+import { Settings, Wand2, Trash2, TrendingDown, Type, Sparkles, Download } from 'lucide-react';
 
-const CleaningControls = ({ strategy, setStrategy, onAction, loading, aiMessage }) => {
+const CleaningControls = ({ strategy, setStrategy, onAction, onDownload, loading, aiMessage }) => {
   return (
     <div className="card" data-testid="cleaning-controls">
       <h3>
@@ -46,7 +46,7 @@ const CleaningControls = ({ strategy, setStrategy, onAction, loading, aiMessage 
             data-testid="remove-duplicates-button"
           >
             <Trash2 size={16} />
-            Remove Duplicates with AI
+            Remove Duplicates
           </button>
 
           <button 
@@ -56,7 +56,7 @@ const CleaningControls = ({ strategy, setStrategy, onAction, loading, aiMessage 
             data-testid="remove-outliers-button"
           >
             <TrendingDown size={16} />
-            Remove Outliers with AI
+            Remove Outliers
           </button>
 
           <button 
@@ -66,7 +66,18 @@ const CleaningControls = ({ strategy, setStrategy, onAction, loading, aiMessage 
             data-testid="clean-text-button"
           >
             <Type size={16} />
-            Clean Text Data with AI
+            Clean Text Data
+          </button>
+
+          {/* Download Data Button */}
+          <button 
+            className="btn btn-success" 
+            onClick={onDownload} 
+            disabled={loading}
+            data-testid="download-data-button"
+          >
+            <Download size={16} />
+            Download Cleaned Data
           </button>
         </div>
 

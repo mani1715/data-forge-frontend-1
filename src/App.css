@@ -1357,3 +1357,168 @@ aside:first-child {
     padding: 40px 20px;
   }
 }
+
+
+
+/* ============================================
+   EXPANDED DASHBOARD (No right panel)
+============================================ */
+
+.dashboard-expanded {
+  grid-template-columns: 300px 1fr !important;
+}
+
+.dashboard-expanded .main-content {
+  max-width: 100%;
+}
+
+/* Visualizations Button Container */
+.viz-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 15px;
+}
+
+/* ============================================
+   VISUALIZATIONS PAGE
+============================================ */
+
+.visualizations-page {
+  padding: 100px 48px 60px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, white 0%, var(--slate-50) 100%);
+}
+
+.viz-header {
+  max-width: 1400px;
+  margin: 0 auto 40px;
+}
+
+.viz-header h1 {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin: 24px 0 8px;
+  letter-spacing: -1px;
+}
+
+.viz-header p {
+  font-size: 16px;
+  color: var(--slate-500);
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.viz-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.viz-card-wide {
+  grid-column: span 2;
+}
+
+.viz-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.viz-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--slate-900);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-title svg {
+  color: var(--brand-red);
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 12px;
+}
+
+.viz-empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--success);
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.viz-empty svg {
+  color: var(--success);
+  opacity: 0.7;
+}
+
+/* Header button styles */
+.header-actions .btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive Visualizations Page */
+@media (max-width: 1024px) {
+  .viz-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .viz-card-wide {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .visualizations-page {
+    padding: 90px 16px 40px;
+  }
+  
+  .viz-header h1 {
+    font-size: 28px;
+  }
+  
+  .viz-card {
+    padding: 16px;
+  }
+  
+  .viz-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   EXPANDED DASHBOARD RESPONSIVE
+============================================ */
+
+@media (max-width: 900px) {
+  .dashboard-expanded {
+    grid-template-columns: 1fr !important;
+  }
+}

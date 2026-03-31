@@ -1,6 +1,7 @@
 import React from 'react';
+import { TrendingUp } from 'lucide-react';
 
-const Header = ({ datasetName, onReset, onDownload, showActions }) => {
+const Header = ({ datasetName, onReset, onDownload, showActions, onShowVisualizations, showVisualizationsButton }) => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -40,6 +41,17 @@ const Header = ({ datasetName, onReset, onDownload, showActions }) => {
               <span className="dataset-name" data-testid="dataset-name">
                 {datasetName}
               </span>
+            )}
+            
+            {showVisualizationsButton && (
+              <button 
+                className="btn btn-secondary"
+                onClick={onShowVisualizations}
+                data-testid="header-visualizations-button"
+              >
+                <TrendingUp size={16} />
+                Visualizations
+              </button>
             )}
             
             <button 
