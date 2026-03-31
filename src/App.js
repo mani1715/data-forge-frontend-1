@@ -33,7 +33,7 @@ function App() {
     setMessageType('info');
     setDatasetName(file.name);
     try {
-      const res = await api.post('/upload', formData);
+      const res = await api.post('/api/upload', formData);
       // FRONTEND SAFETY - Use optional chaining and fallbacks
       setScore(res?.data?.quality_score || 0);
       setStats({ 
@@ -59,7 +59,7 @@ function App() {
   const handleAction = async (actionType) => {
     setLoading(true);
     try {
-      const res = await api.post('/action', { action: actionType, strategy: cleanStrategy });
+      const res = await api.post('/api/action', { action: actionType, strategy: cleanStrategy });
       // FRONTEND SAFETY - Use optional chaining and fallbacks
       setScore(res?.data?.new_score || 0);
       setTableData(res?.data?.preview || []);
@@ -74,7 +74,7 @@ function App() {
     }
   };
 
-  const handleDownload = () => window.open(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001/api'}/download`, '_blank');
+  const handleDownload = () => window.open(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/download`, '_blank');
   const handleReset = () => { setIsUploaded(false); setShowLanding(true); setDatasetName(''); setMessage(''); };
   const handleGetStarted = () => setShowLanding(false);
 
