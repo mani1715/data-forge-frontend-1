@@ -16,38 +16,36 @@ const DataTable = ({ data }) => {
 
   const headers = Object.keys(data[0]);
 
-  // Function to check if a value should be shown in RED (missing/placeholder value)
+  // Check if a value should be shown in RED (missing/placeholder)
   const isMissingValue = (value, columnName) => {
     if (value === null || value === undefined) return true;
     
     const strValue = String(value).trim().toLowerCase();
     const colLower = columnName.toLowerCase();
     
-    // Check for common missing value indicators
+    // Common missing indicators
     if (strValue === '' || strValue === 'nan' || strValue === 'none' || 
-        strValue === 'null' || strValue === 'missing' || strValue === '??' || strValue === '?') {
+        strValue === 'null' || strValue === 'missing' || strValue === '??' || 
+        strValue === '?' || strValue === 'unknown') {
       return true;
     }
     
-    // Check for "Unknown"
-    if (strValue === 'unknown') return true;
-    
-    // Check for 0 in Order ID columns
-    if ((colLower.includes('order') || colLower === 'id') && (value === 0 || strValue === '0')) {
+    // Order ID: 0 or just "0" is missing
+    if ((colLower.includes('order') || colLower === 'id') && 
+        (strValue === '0' || strValue === '0.0' || value === 0)) {
       return true;
     }
     
-    // Check for 0 in numeric columns (price, quantity, etc.)
-    if ((value === 0 || strValue === '0') && 
-        (colLower.includes('price') || colLower.includes('amount') || 
-         colLower.includes('cost') || colLower.includes('total') ||
-         colLower.includes('quantity') || colLower.includes('qty'))) {
+    // Date: 00-00-0000 is missing
+    if ((colLower.includes('date') || colLower.includes('dob')) &&
+        (strValue === '00-00-0000' || strValue === '0000-00-00' || strValue === '00/00/0000')) {
       return true;
     }
     
-    // Check for placeholder date
-    if (strValue === '00-00-0000' || strValue === '0000-00-00' || 
-        strValue === '00/00/0000' || strValue === '0000/00/00') {
+    // Price/Quantity: 0 might be missing (only if column suggests it shouldn't be 0)
+    if ((colLower.includes('price') || colLower.includes('amount') || 
+         colLower.includes('quantity') || colLower.includes('qty')) &&
+        (value === 0 || strValue === '0' || strValue === '0.0')) {
       return true;
     }
     
@@ -75,8 +73,6 @@ const DataTable = ({ data }) => {
                 {headers.map((key) => {
                   const value = row[key];
                   const missing = isMissingValue(value, key);
-                  
-                  // Display the value as-is (backend already formatted it)
                   const displayValue = value === null || value === undefined ? 'MISSING' : String(value);
                   
                   return (
